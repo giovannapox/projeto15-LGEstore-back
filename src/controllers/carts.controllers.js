@@ -38,14 +38,14 @@ export async function searchCart(req, res) {
 
 export async function checkout(req, res) {
 
-    const { cart, totalPrice } = req.body
+    const { cart, total } = req.body
     const { authorization } = req.headers
     const token = authorization?.replace("Bearer ", "")
 
 
     try {
         const user = await db.collection("sessions").findOne({ token })
-        await db.collection("checkouts").insertOne({ idUser: user.idUser, totalPrice: totalPrice, games: cart })
+        await db.collection("checkouts").insertOne({ idUser: user.idUser, totalPrice: total, games: cart })
         await db.collection("carts").deleteMany({ idUser: new ObjectId(user.idUser) })
 
         res.sendStatus(200)
